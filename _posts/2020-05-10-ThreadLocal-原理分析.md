@@ -4,7 +4,7 @@ title:      ThreadLocal 原理分析
 subtitle:   从源码角度理解ThreadLocal
 date:       2020-05-10
 author:     JonsonHao
-header-img: img/post-bg-cook.jpg
+header-img: img/tag-bg-o.jpg
 catalog: true
 tags:
     - Handler
