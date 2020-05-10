@@ -11,14 +11,14 @@ github_repo: "https://github.com/jonsonhao/jonsonhao.github.io.git" # you code r
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "Goals determine what you going to be!"
-sidebar-avatar: /img/avatar_m.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "我都拿时间换了什么！"
+sidebar-avatar: /img/avatar_me.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
 # SNS settings
 RSS: false
-weibo_username:     黑妹小苍猪
+weibo_username:     黑妹小仓猪
 zhihu_username:     Decade
 github_username:    jonsonhao
 #facebook_username:  baiying.qiu.7
@@ -74,7 +74,7 @@ kramdown:
 
 # Analytics settings
 # Baidu Analytics
-#ba_track_id: b50bf2b12b5338a1845e33832976fd68
+ba_track_id: 68beba4c896440cffcb937d8e323e2f1
 
 # Google Analytics
 #ga_track_id: 'UA-90855596-1'            # Format: UA-xxxxxx-xx
