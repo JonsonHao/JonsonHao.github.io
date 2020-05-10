@@ -1,13 +1,15 @@
 ---
 layout:     post
 title:      ThreadLocal 原理分析
-subtitle:   从源码角度理解ThreadLocal
+subtitle:   从源码角度理解 ThreadLocal
 date:       2020-05-10
 author:     JonsonHao
-header-img: img/tag-bg-o.jpg
+header-img: img/post-bg-threadlocal.jpeg
 catalog: true
 tags:
     - Handler
+    - Thread
+    - Java
 ---
 
 
@@ -32,9 +34,9 @@ public static @Nullable Looper myLooper() {
 
 ```
 /**
- * @author: created by linjunhao
+ * @author: created by jonsonhao
  * @date: 2020-03-28 14:56
- * @description:
+ * @description: ThreadLocal Demo
  */
 public class ThreadLocalTest {
 
@@ -73,7 +75,7 @@ public class ThreadLocalTest {
 [Thread#1]mBooleanThreadLocal=null
 ```
 
-可以看到，虽然我们在不同线程中调用的是同一个 ThreadLocal 对象，但是它们通过 ThreadLocal 获取到的值却是不一样的。接下来我们看看 ThreadLocal 内部是如何实现的吧，**了解 ThreadLocal 是如何做到同一个实例，维护着不同线程的数据副本的**
+可以看到，虽然我们在不同线程中调用的是同一个 ThreadLocal 对象，但是它们通过 ThreadLocal 获取到的值却是不一样的。接下来我们看看 ThreadLocal 内部是如何实现的吧，**通过源码了解 ThreadLocal 是如何做到同一个实例，维护着不同线程的数据副本的**
 
 ## 源码分析
 
@@ -107,7 +109,7 @@ public void set(T value) {
 }
 ```
 
-从上面的代码可以看到，ThreadLocalMap 应该就是存储数据的容器类。接下来看一下 getMap() 方法：
+从上面的代码可以看到，ThreadLocal 其实只是一个操作类，而内部真正存储数据的类是 **ThreadLocalMap** 这个容器类。接下来看一下 getMap() 方法：
 
 ```
 //ThreadLocal#getMap()
@@ -127,7 +129,7 @@ void createMap(Thread t, T firstValue) {
 
 也就是说，threadLocals 只有在 ThreadLocal 中的 createMap() 方法中赋值
 
-以上，set 方法就分析完了，虽然我们还不知道 ThreadLocalMap 作用是什么，但是从 map.set() 可以猜测出，ThreadLocalMap 应该就是一个存储数据的容器，我们就先暂时这么认为，后面会详细了解一下这个类。接下来我们看一下 get() 方法：
+以上，set 方法就分析完了，从这个方法中我们可以了解到，**ThreadLocal 其实是封装了对 Thread 中 ThreadLocalMap 属性的操作**。ThreaLocalMap 就是一个类似 HashMap 的容器类（不过它和 HashMap 不同）。接下来我们看一下 get() 方法：
 
 #### get()
 
@@ -153,7 +155,7 @@ public T get() {
 }
 ```
 
-同样的，get 方法也是先获取到当前线程实例后拿到线程的 ThreadLocalMap 对象，然后从中获取值，这也就更加证明了我们前面的猜测，ThreaLocalMap 就是一个类似 HashMap 的容器类（不过它和 HashMap 不同）。接着，我们往下看 setInitialValue 方法：
+同样的，get 方法也是先获取到当前线程实例后拿到线程的 ThreadLocalMap 对象，然后从中获取值。当遇到第4步的情况时会调用 setInitialValue()方法。接着，我们往下看 setInitialValue 方法：
 
 ```
 //ThreadLocal#setInitialValue()
@@ -162,7 +164,7 @@ private T setInitialValue() {
     T value = initialValue();
     //获取当前线程对象
     Thread t = Thread.currentThread();
-    //以当前线程为参数，获取 ThreadLocal
+    //以当前线程为参数，获取 ThreadLocalMap
     ThreadLocalMap map = getMap(t);
     if (map != null)
         map.set(this, value);
@@ -233,7 +235,7 @@ static class ThreadLocalMap {
 
 * [带你了解源码中的 ThreadLocal](https://mp.weixin.qq.com/s?__biz=MzA5MzI3NjE2MA==&mid=2650243742&idx=1&sn=27de324a1685ebbb112a239777eb7f52&chksm=886373f1bf14fae7c7515c76d65707dc6f026996c7cbfe3df16a52d86ced2904e154941f744f&scene=38#wechat_redirect)
 * [从 ThreadLocal 的实现看散列算法](https://blog.csdn.net/y4x5M0nivSrJaY3X92c/article/details/81124944)
-* [Java | ThreadLocal与无锁线程安全](https://www.jianshu.com/p/ed1eae5f7dfd)
+* [Java \| ThreadLocal与无锁线程安全](https://www.jianshu.com/p/ed1eae5f7dfd)
 * [通俗易懂弄清ThreadLocal内部原理](https://juejin.im/post/5e26e2636fb9a030051f02dd)
 * 《Android开发艺术探索》 任玉刚 著
 
